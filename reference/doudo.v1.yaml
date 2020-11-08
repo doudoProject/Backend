@@ -4,7 +4,69 @@ info:
   version: '1.0'
   description: ''
 servers:
-  - url: 'http://api.doudo.cf:3000'
-paths: {}
+  - url: 'https://doudo.run.goorm.io'
+paths:
+  /v1/auth/signup:
+    post:
+      summary: Sign Up
+      operationId: post-v1-auth-signup
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userid:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+        description: ''
+      security: []
 components:
-  schemas: {}
+  schemas:
+    User:
+      title: User
+      type: object
+      description: 이용자 모델입니다
+      properties:
+        userid:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        group:
+          type: number
+      required:
+        - userid
+        - email
+        - password
+        - name
+      x-examples:
+        example-1:
+          userid: user001
+          email: user@email.com
+          password: strong_password
+          name: 유저1
+          group: 0
+  securitySchemes:
+    Access Token:
+      name: Bearer
+      type: apiKey
+      in: header
+      description: ''
+tags:
+  - name: Auth
+security:
+  - Access Token: []
