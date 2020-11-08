@@ -1,0 +1,10 @@
+openapi: 3.0.0
+info:
+  title: Doudo Project API Doc.
+  version: '1.0'
+  description: ''
+servers:
+  - url: 'http://api.doudo.cf:3000'
+paths: {}
+components:
+  schemas: {}
