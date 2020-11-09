@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET home page. */
+/* Doudo API Main */
 router.get('/', function(req, res, next) {
 	res.status(200).send('Thank you for using Doudo');
 });

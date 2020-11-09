@@ -3,11 +3,32 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
-var app = express();
+var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+var passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
+
+var app = express();
+
+//CORS(Temporary)
+app.use(require('cors')());
+
+//Body parser
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+//DB
+const keys = require('./config/keys');
+mongoose
+	.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+	.then(() => {console.log('DB 연결 성공')})
+	.catch(err => {console.log('DB 연결 실패\n' + err)});
+
+//Passport
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

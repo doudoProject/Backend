@@ -1,5 +1,7 @@
 var router = require('express').Router()
 var auth = require('./auth')
+var group = require('./group')
+const passport = require('passport')
 
 /* api Main */
 router.get('/', (req, res, next) => {
@@ -7,5 +9,6 @@ router.get('/', (req, res, next) => {
 });
 
 router.use('/auth', auth)
+router.use('/group',passport.authenticate('jwt', { session: false}), group)
 
 module.exports = router
