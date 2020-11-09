@@ -6,10 +6,6 @@ const bcrypt = require('bcryptjs');
 const keys = require('../../../config/keys');
 const User = require('../../../models/User');
 
-router.get('/', (req, res, next) => {
-	res.status(200).send('<h1 align="center">Auth API</h1>');
-});
-
 /* 
 	POST Sign Up
 	/v1/auth/signup
