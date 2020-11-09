@@ -1,6 +1,6 @@
 var router = require('express').Router()
 var auth = require('./auth')
-var group = require('./group')
+var couple = require('./couple')
 const passport = require('passport')
 
 /* api Main */
@@ -9,6 +9,6 @@ router.get('/', (req, res, next) => {
 });
 
 router.use('/auth', auth)
-router.use('/group',passport.authenticate('jwt', { session: false}), group)
+router.use('/couple',passport.authenticate('jwt', { session: false}), couple)
 
 module.exports = router
