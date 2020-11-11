@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Doudo Project API Doc.
   version: '1.0'
-  description: ''
+  description: '> '
 servers:
   - url: 'https://doudo.run.goorm.io'
 paths:
@@ -68,6 +68,7 @@ paths:
                   type: string
         description: ''
       security: []
+      description: Sign Up
   /v1/auth/signin:
     post:
       summary: Sign In
@@ -118,6 +119,86 @@ paths:
       security: []
       tags:
         - Auth
+  /v1/couple:
+    post:
+      summary: Create Couple
+      operationId: post-v1-couple
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  coupleInfo:
+                    $ref: '#/components/schemas/Couple'
+      tags:
+        - Couple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coupleid:
+                  type: string
+                name:
+                  type: string
+                  description: '커플명, 없으면 기본값 ''커플명을 입력해주세요'''
+              required:
+                - coupleid
+      description: 전달된 아이디와 이름으로 커플을 만듭니다
+      parameters:
+        - schema:
+            type: string
+            default: application/json
+          in: header
+          description: ''
+          name: Content-Type
+          required: true
+    patch:
+      summary: Modify Couple
+      operationId: patch-v1-couple
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Couple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Couple'
+        description: ''
+    delete:
+      summary: Delete Couple
+      operationId: delete-v1-couple
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Couple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+        description: ''
+      description: 자신의 커플을 삭제합니다.
+    get:
+      summary: Get Couple
+      operationId: get-v1-couple
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Couple'
+      description: 자신의 커플 정보를 가져옵니다
 components:
   schemas:
     User:
@@ -147,7 +228,7 @@ components:
           type: string
         name:
           type: string
-        group:
+        coupleid:
           type:
             - number
             - 'null'
@@ -159,13 +240,67 @@ components:
         - email
         - password
         - name
+    Couple:
+      title: Couple
+      type: object
+      properties:
+        coupleid:
+          type: string
+        name:
+          type: string
+        member:
+          type: array
+          items:
+            type: string
+        todo:
+          type: array
+          items:
+            type: string
+        event:
+          type: array
+          items:
+            $ref: '#/components/schemas/CalendarEvent'
+      required:
+        - coupleid
+        - name
+        - member
+    CalendarEvent:
+      title: CalendarEvent
+      type: object
+      properties:
+        name:
+          type: string
+        datetime:
+          description: ''
+          type: object
+          required:
+            - allday
+            - start
+            - end
+          properties:
+            allday:
+              type: boolean
+              description: allday일 경우 start로 해당일 내내 이벤트
+            start:
+              type: string
+              description: 'YYYY-MM-DD HH:ii:ss'
+            end:
+              type: string
+              description: 'YYYY-MM-DD HH:ii:ss'
+        author:
+          type: string
+          description: 작성자 아이디
+      required:
+        - name
+        - author
   securitySchemes:
     Access Token:
-      name: Bearer
+      name: Authorization
       type: apiKey
       in: header
-      description: ''
+      description: Bearer access_token_token
 tags:
   - name: Auth
+  - name: Couple
 security:
   - Access Token: []
