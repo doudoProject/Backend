@@ -52,7 +52,7 @@ router.post('/signin', (req, res) => {
     const userid = req.body.userid;
     const password = req.body.password;
 	
-    User.findOne({userid})
+    User.findOne({userid:userid})
         .then(user => {
             if(!user){
                 return res.status(400).json({
