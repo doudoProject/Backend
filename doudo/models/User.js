@@ -41,18 +41,6 @@ UserSchema.statics.findOneByEmail = function (email){
 	return this.findOne({email: email});
 }
 
-//Methods
-
-// Encrypt password
-UserSchema.methods.encryptPassword = function(){
-	bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(this.password, salt, (err, hash) => {
-            if(err) throw err;
-            UserSchema.password = hash;
-        })
-    })
-}
-
 // Middleware
 
 // Pre save
@@ -69,6 +57,14 @@ UserSchema.pre('save',function(next){
 		})
 	})
 });
+
+//Methods
+
+// Set couple
+UserSchema.statics.setCouple = function(userobjectid, coupleobjectid){
+	var user = this.findById(userobjectid);
+	return user.updateOne({},{$set:{couple:coupleobjectid}},{upsert:true})
+}
 
 //Signup User
 UserSchema.methods.signUp = function (){

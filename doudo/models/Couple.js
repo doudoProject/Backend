@@ -38,7 +38,7 @@ CoupleSchema.statics.findOneByUserId = function(userid){
 }
 CoupleSchema.statics.create = function(payload){
 	var newCouple = new this(payload);
-	newCouple.save();
+	return newCouple.save();
 }
 
 //Methods

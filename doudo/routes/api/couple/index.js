@@ -7,13 +7,13 @@ const CalendarEvent = require('../../../models/CalendarEvent');
 	GET Get Couple Info
 	/v1/couple
 */
-router.get('', (req, res, next) => {
-	Couple.findOneByCoupleId(req.body.coupleid)
+router.get('/:coupleid', (req, res, next) => {
+	Couple.findOneByCoupleId(req.params.coupleid)
 	    .then(couple => {
 	        if(!couple) {
 	            return res.status(400).json({
 					success:false,
-	                message: "그런 커플은 없습니다",
+	                message: "그런 커플이 없습니다",
 	            })
 	        } 
 			else {
@@ -41,45 +41,43 @@ router.post('', (req, res, next) => {
 	            name: req.body.name,
 	            member: [req.user.id],
 			}
-			Couple.create(newCouple);
+			Couple.create(newCouple)
+			.then(couple=>{
+				res.json({
+					success:true,
+					message:'커플이 생성되었습니다',
+					coupleInfo:couple
+				});
+			})
 		}
 	})
-	/*
-	return;
-	Couple.findOne({coupleid:req.body.coupleid})
-	    .then(couple => {
-	        if(couple) {
-	            return res.status(400).json({
-					success:false,
-	                message: "해당 커플 아이디는 사용할 수 없습니다",
-	            })
-	        } 
-			else {
-				//본인이 이미 커플인지 확인
-				
-				//커플 생성
-	            const newCouple = new Couple({
-					coupleid: req.body.coupleid,
-	                name: req.body.name,
-	                member: [req.user.id],
-	                todo:[],
-					events: [],
-	            });
-	            newCouple.save()
-					.then(couple => {
-						// 계정 커플 ID 저장
-						User.findOneAndUpdate({ userid: req.user.userid },{ $set: { coupleid: `${couple.coupleid}` } },{ upsert: true, useFindAndModify: false })
-							.then(user=>{
-								res.json({
-									success:true,
-									coupleInfo:couple,
-								})
-							})
-					})
-	                .catch(err => console.log(err))
-	        }
-	    })
-		*/
+});
+
+/* 
+	POST Join Couple
+	/v1/couple/join
+*/
+router.post('/join', (req, res, next) => {
+	Couple.findOneByCoupleId(req.body.coupleid)
+	.then(couple=>{
+		if(!couple){
+			res.status(400).json({
+				success:false,
+				message:'그런 커플이 없습니다'
+			})
+		}
+		else{
+			couple.member.push(req.user.id)
+			couple.save();
+			User.setCouple(req.user.id,couple._id)
+			.then(()=>{
+				res.json({
+					success:true,
+					message:'커플에 가입했습니다'
+				})
+			})
+		}
+	})
 });
 
 module.exports = router
