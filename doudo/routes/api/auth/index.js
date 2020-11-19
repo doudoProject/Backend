@@ -17,17 +17,24 @@ router.post('/signup', (req, res, next) => {
 		password: req.body.password,
 		name:req.body.name
 	});
-	newUser.signUp()
-	.then(user=>{
-		res.json({
-			success:true,
-			userInfo:user
-		})
-	})
-	.catch(err=>res.status(400).json({
-		success:false,
-		message:err.message
-	}))
+	//Encrypt Password
+	bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if(err) throw err;
+            newUser.password = hash;
+			newUser.signUp()
+			.then(user=>{
+				res.json({
+					success:true,
+					userInfo:user
+				})
+			})
+			.catch(err=>res.status(400).json({
+				success:false,
+				message:err.message
+			}))
+        })
+    })
 })
 
 

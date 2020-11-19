@@ -48,14 +48,15 @@ UserSchema.methods.encryptPassword = function(){
 	bcrypt.genSalt(10, (err, salt) => {
         bcrypt.hash(this.password, salt, (err, hash) => {
             if(err) throw err;
-            this.password = hash;
+            UserSchema.password = hash;
         })
     })
 }
 
+// Middleware
+
 // Pre save
 UserSchema.pre('save',function(next){
-	this.encryptPassword();
 	this.constructor.findOneByUserId(this.userid)
 	.then(user=>{
 		if(user)

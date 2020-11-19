@@ -8,29 +8,20 @@ const CalendarEvent = require('../../../models/CalendarEvent');
 	/v1/couple
 */
 router.get('', (req, res, next) => {
-	Couple.findOne({coupleid:req.body.coupleid})
+	Couple.findOneByCoupleId(req.body.coupleid)
 	    .then(couple => {
 	        if(!couple) {
 	            return res.status(400).json({
 					success:false,
-	                message: "그런 커플",
+	                message: "그런 커플은 없습니다",
 	            })
 	        } 
 			else {
 				//본인이 커플인지 확인 필요
-	            const newCouple = new Couple({
-					coupleid: req.body.coupleid,
-	                name: req.body.name,
-	                member: [req.user.userid],
-	                todo:[],
-					events: [],
-	            });
-	            newCouple.save()
-					.then(couple => res.json({
-						success:true,
-						coupleInfo:couple
-					}))
-	                .catch(err => console.log(err));
+				res.json({
+					success:true,
+					coupleInfo:couple
+				})
 	        }
 	    })
 });
@@ -41,6 +32,20 @@ router.get('', (req, res, next) => {
 	/v1/couple
 */
 router.post('', (req, res, next) => {
+	User.findOneByUserId(req.user.userid)
+	.then(user=>{
+		if(user){
+			//본인이 이미 커플인지 확인
+			var newCouple = {
+				coupleid: req.body.coupleid,
+	            name: req.body.name,
+	            member: [req.user.id],
+			}
+			Couple.create(newCouple);
+		}
+	})
+	/*
+	return;
 	Couple.findOne({coupleid:req.body.coupleid})
 	    .then(couple => {
 	        if(couple) {
@@ -74,6 +79,7 @@ router.post('', (req, res, next) => {
 	                .catch(err => console.log(err))
 	        }
 	    })
+		*/
 });
 
 module.exports = router
