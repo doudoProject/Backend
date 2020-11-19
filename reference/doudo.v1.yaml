@@ -198,7 +198,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Couple'
-      description: 자신의 커플 정보를 가져옵니다
+      description: |-
+        자신의 커플 정보를 가져옵니다
+        >Path Param 있음<br>
+        /v1/couple/<b>:coupleid</b>
+      parameters: []
+    parameters: []
+  /v1/couple/join:
+    post:
+      summary: Join Couple by Id
+      operationId: post-v1-couple-join
+      responses:
+        '200':
+          description: OK
+      description: coupleid 로 커플에 참가합니다
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                coupleid:
+                  type: string
 components:
   schemas:
     User:
