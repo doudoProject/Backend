@@ -1,12 +1,21 @@
 openapi: 3.0.0
 info:
-  title: Doudo Project API Doc.
+  title: Doudo
   version: '1.0'
-  description: '> '
+  description: |
+    ## API Documentation for Project Doudo
+  contact:
+    name: SeongCheol Park
+    email: gorae02@gmail.com
+  termsOfService: Not published yet
+  license:
+    name: MIT License
+    url: 'https://opensource.org/licenses/MIT'
 servers:
   - url: 'https://doudo.run.goorm.io'
+    description: Dev Server
   - url: 'https://13.125.63.28:3000'
-    description: ''
+    description: AWS Server
 paths:
   /v1/auth/signup:
     post:
@@ -93,6 +102,8 @@ paths:
                     type:
                       - string
                       - 'null'
+                  expiresIn:
+                    type: integer
               examples:
                 로그인 실패:
                   value:
@@ -101,7 +112,8 @@ paths:
                 로그인 성공:
                   value:
                     success: true
-                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYTk0YjhhMDRjODMyMGQ1YTM0NTg2NSIsIm5hbWUiOiLsnKDsoIAxIiwiaWF0IjoxNjA0OTMwOTM5LCJleHAiOjE2MDQ5MzgxMzl9.6brPYHmqZCFSVQOAwqC9qCaGJByBH1dYj1Zc8Sp1SBg
+                    accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmYjY2ZDRiMDdlNDE1MGE4MTA4YmNiMCIsIm5hbWUiOiLsnKDsoIAxIiwiY291cGxlIjoiNWZiYTNkYWE3NWUxMzkwODY1MTMyNDA4IiwiaWF0IjoxNjA2MDUxMDYzLCJleHAiOjE2MDYwNTgyNjN9.BcJGsSeLRTqBPjk9rlJTXy2isMHuew_lQSrNyzHsVes
+                    expiresIn: 7200
       description: Sign In
       requestBody:
         content:
@@ -116,7 +128,7 @@ paths:
             examples:
               예제 1:
                 value:
-                  userid: user001
+                  userid: user1
                   password: string
       security: []
       tags:
@@ -218,6 +230,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Couple'
+              examples:
+                example-1:
+                  value:
+                    name: string
+                    member:
+                      - permission: 0
+                        _id: 5fb66d4b07e4150a8108bcb0
+                        userid: user1
+                        email: string
+                        password: $2a$10$Rcz4wae0PGqGZ7EpgTToIeHaIBlmxsJ0w9X.Lt1cSf3DIumcBkQte
+                        name: 유저1
+                        __v: 0
+                        couple: 5fba3daa75e1390865132408
+                      - permission: 0
+                        _id: 5fb6881def338a0ea302a0ca
+                        userid: user2
+                        email: strin2g
+                        password: $2a$10$a57xsdScYQSwQ.icnsKYvuJR4EPlC8Y7CG/yklfT0v51xDHll2ZZ.
+                        name: string
+                        __v: 0
+                        couple: 5fba3daa75e1390865132408
+                    _id: 5fba3daa75e1390865132408
+                    todo: []
+                    coupleid: string
+                    event: []
+                    __v: 2
       description: |-
         자신의 커플 정보를 가져옵니다
         >Path Param 있음<br>
@@ -246,14 +284,69 @@ paths:
     get:
       summary: Get User Info
       tags: []
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                example-1:
+                  value:
+                    permission: 0
+                    _id: 5fb66d4b07e4150a8108bcb0
+                    userid: user1
+                    email: string
+                    name: 유저1
+                    __v: 0
+                    couple:
+                      name: string
+                      member:
+                        - 5fb66d4b07e4150a8108bcb0
+                        - 5fb6881def338a0ea302a0ca
+                      _id: 5fba3daa75e1390865132408
+                      todo:
+                        - done: false
+                          _id: 5fba6a4dddd2c40aae2bf3de
+                          description: fsdfsfesfesafsaefa
+                          duedate: '2020-11-22T00:00:00.000Z'
+                        - done: false
+                          _id: 5fba6aafddd2c40aae2bf3e1
+                          description: 투두 추가 테스트
+                          duedate: '2020-11-28T00:00:00.000Z'
+                      coupleid: string
+                      event: []
+                      __v: 4
       operationId: get-v1-user
   /v1/todo:
     get:
       summary: Get Todo List
       tags:
         - Todo
-      responses: {}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  '':
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Todo'
+              examples:
+                example-1:
+                  value:
+                    - done: false
+                      _id: 5fba6a4dddd2c40aae2bf3de
+                      description: fsdfsfesfesafsaefa
+                      duedate: '2020-11-22T00:00:00.000Z'
+                    - done: false
+                      _id: 5fba6aafddd2c40aae2bf3e1
+                      description: 투두 추가 테스트
+                      duedate: '2020-11-28T00:00:00.000Z'
       operationId: get-v1-todo
     post:
       summary: Add Todo List
@@ -261,21 +354,63 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  todo:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Todo'
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    todo:
+                      - done: false
+                        _id: 5fba6a4dddd2c40aae2bf3de
+                        description: fsdfsfesfesafsaefa
+                        duedate: '2020-11-22T00:00:00.000Z'
+                      - done: false
+                        _id: 5fba6aafddd2c40aae2bf3e1
+                        description: 투두 추가 테스트
+                        duedate: '2020-11-28T00:00:00.000Z'
       tags:
         - Todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                duedate:
+                  type: string
+                  description: 'YYYY-mm-dd HH:ii:ss'
+            examples:
+              example-1:
+                value:
+                  description: Todo 추가 테스트
+                  duedate: '2020-11-22 00:00:00'
 components:
   schemas:
     User:
       title: User
       type: object
-      description: 이용자 모델입니다
+      description: ''
       x-examples:
         아직 그룹이 없는 경우:
-          userid: user1
-          email: email@email.com
-          password: some_encrypted_string
-          name: 이름
           permission: 0
+          userid: user1
+          email: string
+          password: $2a$10$Rcz4wae0PGqGZ7EpgTToIeHaIBlmxsJ0w9X.Lt1cSf3DIumcBkQte
+          name: 유저1
+          couple:
+            $oid: 5fba3daa75e1390865132408
         그룹 있는경우:
           userid: user1
           email: email@email.com
@@ -292,10 +427,8 @@ components:
           type: string
         name:
           type: string
-        coupleid:
-          type:
-            - number
-            - 'null'
+        couple:
+          $ref: '#/components/schemas/Couple'
         permission:
           type: integer
           default: 0
@@ -307,6 +440,7 @@ components:
     Couple:
       title: Couple
       type: object
+      x-examples: {}
       properties:
         coupleid:
           type: string
@@ -315,7 +449,7 @@ components:
         member:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/User'
         todo:
           type: array
           items:
@@ -357,6 +491,19 @@ components:
       required:
         - name
         - author
+    Todo:
+      title: Todo
+      type: object
+      properties:
+        description:
+          type: string
+        done:
+          type: boolean
+        duedate:
+          type: string
+          description: 'YYYY-mm-dd HH:ii:ss'
+      required:
+        - description
   securitySchemes:
     Access Token:
       name: Authorization
