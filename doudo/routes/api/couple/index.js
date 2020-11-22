@@ -7,8 +7,8 @@ const CalendarEvent = require('../../../models/CalendarEvent');
 	GET Get Couple Info
 	/v1/couple
 */
-router.get('/:coupleid', (req, res, next) => {
-	Couple.findOneByCoupleId(req.params.coupleid)
+router.get('', (req, res, next) => {
+	Couple.findOneByCoupleId(req.user.couple)
 	    .then(couple => {
 	        if(!couple) {
 	            return res.status(400).json({

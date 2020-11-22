@@ -64,7 +64,8 @@ router.post('/signin', (req, res) => {
                         // JWT PAYLOAD 생성
                         const payload = {
                             id: user.id,
-                            name: user.name
+                            name: user.name,
+							couple: user.couple
                         };
 
                         // JWT 토큰 생성

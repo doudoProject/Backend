@@ -19,6 +19,7 @@ const CoupleSchema = new Schema({
     },
 	member: {
 		type:[Schema.Types.ObjectId],
+		ref:'user',
 		required:true,
 		unique: [true, '이미 커플이 되셨습니다'],
 		validate:[memberMaxLengthValidator,'양다리는 안돼요..']

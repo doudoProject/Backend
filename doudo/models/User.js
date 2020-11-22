@@ -21,7 +21,8 @@ const UserSchema = new Schema({
         required: true
     },
 	couple : {
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+		ref:'couple'
     },
 	permission:{
 		type: Number,
