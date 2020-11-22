@@ -14,7 +14,7 @@ info:
 servers:
   - url: 'https://doudo.run.goorm.io'
     description: Dev Server
-  - url: 'https://13.125.63.28:3000'
+  - url: 'https://doudo.cf'
     description: AWS Server
 paths:
   /v1/auth/signup:
