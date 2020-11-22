@@ -8,7 +8,7 @@ const CalendarEvent = require('../../../models/CalendarEvent');
 	/v1/couple
 */
 router.get('', (req, res, next) => {
-	Couple.findOneByCoupleId(req.user.couple)
+	Couple.findById(req.user.couple).populate('member')
 	    .then(couple => {
 	        if(!couple) {
 	            return res.status(400).json({
@@ -35,7 +35,7 @@ router.post('', (req, res, next) => {
 	User.findOneByUserId(req.user.userid)
 	.then(user=>{
 		if(user){
-			//본인이 이미 커플인지 확인
+			//Todo: 본인이 이미 커플인지 확인
 			var newCouple = {
 				coupleid: req.body.coupleid,
 	            name: req.body.name,
@@ -43,11 +43,21 @@ router.post('', (req, res, next) => {
 			}
 			Couple.create(newCouple)
 			.then(couple=>{
-				res.json({
-					success:true,
-					message:'커플이 생성되었습니다',
-					coupleInfo:couple
-				});
+				User.setCouple(req.user.id,couple._id)
+				.then(()=>{
+					res.json({
+						success:true,
+						message:'커플이 생성되었습니다',
+						coupleInfo:couple
+					});
+				})
+				
+			})
+			.catch(err=>{
+				res.status(400).json({
+					success:false,
+					message:err
+				})
 			})
 		}
 	})
@@ -68,14 +78,23 @@ router.post('/join', (req, res, next) => {
 		}
 		else{
 			couple.member.push(req.user.id)
-			couple.save();
-			User.setCouple(req.user.id,couple._id)
+			couple.save()
 			.then(()=>{
-				res.json({
-					success:true,
-					message:'커플에 가입했습니다'
+				User.setCouple(req.user.id,couple._id)
+				.then(()=>{
+					res.json({
+						success:true,
+						message:'커플에 가입했습니다'
+					})
 				})
 			})
+			.catch(err=>{
+				res.status(400).json({
+					success:false,
+					message:err
+				})
+			})
+			
 		}
 	})
 });

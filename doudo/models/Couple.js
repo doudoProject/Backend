@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const CalendarEventSchema = require('./CalendarEvent');
+const TodoSchema = require('./Todo');
 const Schema = mongoose.Schema;
 
 //Validator
@@ -18,13 +19,15 @@ const CoupleSchema = new Schema({
 		default: '커플 이름을 설정해주세요',
     },
 	member: {
-		type:[Schema.Types.ObjectId],
-		ref:'user',
-		required:true,
-		unique: [true, '이미 커플이 되셨습니다'],
+		type:[{
+			type:Schema.Types.ObjectId,
+			ref:'user',
+			required:true,
+			unique: [true, '이미 커플이 되셨습니다'],
+		}],
 		validate:[memberMaxLengthValidator,'양다리는 안돼요..']
 	},
-	todo: [String],
+	todo: [TodoSchema],
 	event: [CalendarEventSchema],
 });
 
@@ -40,11 +43,6 @@ CoupleSchema.statics.findOneByUserId = function(userid){
 CoupleSchema.statics.create = function(payload){
 	var newCouple = new this(payload);
 	return newCouple.save();
-}
-
-//Methods
-CoupleSchema.methods.join = function(objectid){
-	this.update
 }
 
 module.exports = Couple = mongoose.model('couple', CoupleSchema);
