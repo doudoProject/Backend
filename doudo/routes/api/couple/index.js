@@ -9,21 +9,20 @@ const CalendarEvent = require('../../../models/CalendarEvent');
 */
 router.get('', (req, res, next) => {
 	Couple.findById(req.user.couple).populate('member')
-	    .then(couple => {
-	        if(!couple) {
-	            return res.status(400).json({
-					success:false,
-	                message: "그런 커플이 없습니다",
-	            })
-	        } 
-			else {
-				//본인이 커플인지 확인 필요
-				res.json({
-					success:true,
-					coupleInfo:couple
-				})
-	        }
+	.then(couple => {
+	    if(!couple) throw 'no such couple'
+		//Todo :본인이 커플인지 확인 필요
+		res.json(
+			couple
+		)
+	})
+	.catch(err=>{
+		res.status(400).json({
+			success:false,
+	        message: err.message,
 	    })
+	})
+	
 });
 
 
@@ -47,19 +46,18 @@ router.post('', (req, res, next) => {
 				.then(()=>{
 					res.json({
 						success:true,
-						message:'커플이 생성되었습니다',
 						coupleInfo:couple
 					});
 				})
 				
 			})
-			.catch(err=>{
-				res.status(400).json({
-					success:false,
-					message:err
-				})
-			})
 		}
+	})
+	.catch(err=>{
+		res.status(400).json({
+			success:false,
+			message:err.message
+		})
 	})
 });
 
@@ -70,32 +68,24 @@ router.post('', (req, res, next) => {
 router.post('/join', (req, res, next) => {
 	Couple.findOneByCoupleId(req.body.coupleid)
 	.then(couple=>{
-		if(!couple){
-			res.status(400).json({
-				success:false,
-				message:'그런 커플이 없습니다'
-			})
-		}
-		else{
-			couple.member.push(req.user.id)
-			couple.save()
-			.then(()=>{
-				User.setCouple(req.user.id,couple._id)
-				.then(()=>{
-					res.json({
-						success:true,
-						message:'커플에 가입했습니다'
-					})
+		if(!couple) throw 'no such couple'
+		couple.member.push(req.user.id)
+		couple.save()
+		.then(()=>{
+			User.setCouple(req.user.id,couple._id)
+			.then(couple=>{
+				res.json({
+					success:true,
+					coupleInfo:couple
 				})
 			})
-			.catch(err=>{
-				res.status(400).json({
-					success:false,
-					message:err
-				})
-			})
-			
-		}
+		})
+	})
+	.catch(err=>{
+		res.status(400).json({
+			success:false,
+			message:err.message
+		})
 	})
 });
 

@@ -7,4 +7,4 @@ const TodoSchema = new Schema({
 	duedate:{type:Date}
 });
 
-module.exports = TodoSchema;
+module.exports = TodoSchema

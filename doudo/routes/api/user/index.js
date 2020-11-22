@@ -6,18 +6,17 @@ const User = require('../../../models/User');
 	/v1/user
 */
 router.get('', (req, res, next) => {
-	User.find({userid:req.user.userid}).populate('couple')
+	User.findOne({userid:req.user.userid}).select('-password').populate('couple')
 	.then(user=>{
 		if(!user) throw 'no such user';
-		res.status(200).json({
-			success:true,
-			userInfo:user
-		})
+		res.status(200).json(
+			user
+		)
 	})
 	.catch(err=>{
 		res.status(400).json({
 			success:false,
-			message:err
+			message:err.message
 		})
 	})
 });

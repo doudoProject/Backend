@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const CalendarEventSchema = require('./CalendarEvent');
-const TodoSchema = require('./Todo');
+const Todo = require('./Todo');
 const Schema = mongoose.Schema;
 
 //Validator
@@ -27,7 +27,7 @@ const CoupleSchema = new Schema({
 		}],
 		validate:[memberMaxLengthValidator,'양다리는 안돼요..']
 	},
-	todo: [TodoSchema],
+	todo: [Todo],
 	event: [CalendarEventSchema],
 });
 
