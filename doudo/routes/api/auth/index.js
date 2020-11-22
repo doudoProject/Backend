@@ -17,17 +17,24 @@ router.post('/signup', (req, res, next) => {
 		password: req.body.password,
 		name:req.body.name
 	});
-	newUser.signUp()
-	.then(user=>{
-		res.json({
-			success:true,
-			userInfo:user
-		})
-	})
-	.catch(err=>res.status(400).json({
-		success:false,
-		message:err.message
-	}))
+	//Encrypt Password
+	bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if(err) throw err;
+            newUser.password = hash;
+			newUser.signUp()
+			.then(user=>{
+				res.json({
+					success:true,
+					userInfo:user
+				})
+			})
+			.catch(err=>res.status(400).json({
+				success:false,
+				message:err.message
+			}))
+        })
+    })
 })
 
 
@@ -57,7 +64,8 @@ router.post('/signin', (req, res) => {
                         // JWT PAYLOAD 생성
                         const payload = {
                             id: user.id,
-                            name: user.name
+                            name: user.name,
+							couple: user.couple
                         };
 
                         // JWT 토큰 생성
