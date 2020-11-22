@@ -5,6 +5,8 @@ info:
   description: '> '
 servers:
   - url: 'https://doudo.run.goorm.io'
+  - url: 'https://13.125.63.28:3000'
+    description: ''
 paths:
   /v1/auth/signup:
     post:
@@ -135,6 +137,24 @@ paths:
                     type: boolean
                   coupleInfo:
                     $ref: '#/components/schemas/Couple'
+              examples:
+                example-1:
+                  value:
+                    success: true
+                    coupleInfo:
+                      coupleid: string
+                      name: string
+                      member:
+                        - string
+                      todo:
+                        - string
+                      event:
+                        - name: string
+                          datetime:
+                            allday: true
+                            start: string
+                            end: string
+                          author: string
       tags:
         - Couple
       requestBody:
@@ -203,6 +223,8 @@ paths:
         >Path Param 있음<br>
         /v1/couple/<b>:coupleid</b>
       parameters: []
+      tags:
+        - Couple
     parameters: []
   /v1/couple/join:
     post:
@@ -220,6 +242,27 @@ paths:
               properties:
                 coupleid:
                   type: string
+  /v1/user:
+    get:
+      summary: Get User Info
+      tags: []
+      responses: {}
+      operationId: get-v1-user
+  /v1/todo:
+    get:
+      summary: Get Todo List
+      tags:
+        - Todo
+      responses: {}
+      operationId: get-v1-todo
+    post:
+      summary: Add Todo List
+      operationId: post-v1-todo
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Todo
 components:
   schemas:
     User:
@@ -323,5 +366,6 @@ components:
 tags:
   - name: Auth
   - name: Couple
+  - name: Todo
 security:
   - Access Token: []
