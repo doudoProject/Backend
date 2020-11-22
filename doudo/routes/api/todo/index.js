@@ -11,10 +11,7 @@ router.get('', (req, res, next) => {
 	Couple.findById(req.user.couple)
 	.then(couple=>{
 		if(!couple) throw 'no such couple'
-		res.json({
-			success:true,
-			todo:couple.todo
-		})
+		res.json(couple.todo)
 	})
 	.catch(err=>{
 		res.status(400).json({
