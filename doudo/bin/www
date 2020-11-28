@@ -11,8 +11,8 @@ var https = require('https');
 const fs = require('fs');
 
 const options = {
-  key: fs.readFileSync('/home/ubuntu/cert/doudo.cf/privkey1.pem'),
-  cert: fs.readFileSync('/home/ubuntu/cert/doudo.cf/cert1.pem')
+  key: fs.readFileSync('/home/ubuntu/cert/api.doudo.kr/privkey1.pem'),
+  cert: fs.readFileSync('/home/ubuntu/cert/api.doudo.kr/cert1.pem')
 };
 
 /**
