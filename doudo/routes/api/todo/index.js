@@ -50,6 +50,27 @@ router.post('', (req, res, next) => {
 	})
 });
 
+/* 
+	DELETE Delete Todolist
+	/v1/todo
+*/
+
+router.delete('', (req, res, next) => {
+  Todo.findById(req.body.id)
+  .then((todo)=>{
+    todo.remove()
+    res.json({
+			success:true
+		})
+  })
+  .catch(err=>{
+		res.status(400).json({
+			success:false,
+			message:err.message
+		})
+	})
+})
+
 
 
 module.exports = router
