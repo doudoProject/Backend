@@ -408,6 +408,29 @@ paths:
               properties:
                 id:
                   type: string
+      tags:
+        - Todo
+    put:
+      summary: Modify Todo
+      operationId: put-v1-todo
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Todo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Todo'
+            examples:
+              example-1:
+                value:
+                  _id: '123456789'
+                  description: string
+                  done: true
+                  duedate: string
+        description: ''
 components:
   schemas:
     User:
