@@ -26,13 +26,29 @@ router.get('', (req, res, next) => {
 	/v1/todo
 */
 router.post('', (req, res, next) => {
+  var newTodo = {
+		description:req.body.description,
+		duedate:req.body.duedate
+	}
+  Couple.update(
+    { _id : mongoose.Types.ObjectId(req.user.couple) },
+    { $push : { todo: newTodo }})
+  .then(()=>{
+    res.json({
+      success:true
+    })
+  })
+  .catch(err=>{
+    res.status(400).json({
+      success:false,
+      message:err.message
+    })
+  })
+  /*
 	Couple.findById(req.user.couple)
 	.then(couple=>{
 		if(!couple) throw 'no such couple'
-		var newTodo = {
-			description:req.body.description,
-			duedate:req.body.duedate
-		}
+		
 		couple.todo.push(newTodo);
 		couple.save()
 		.then((couple)=>{
@@ -47,7 +63,7 @@ router.post('', (req, res, next) => {
 			success:false,
 			message:err.message
 		})
-	})
+	})*/
 });
 
 /* 
@@ -56,19 +72,13 @@ router.post('', (req, res, next) => {
 */
 
 router.delete('', (req, res, next) => {
-  Todo.findById(req.body.id)
-  .then((todo)=>{
-    todo.remove()
-    res.json({
-			success:true
-		})
+  Couple.update({_id: mongoose.Types.ObjectId(req.user.couple)},{$pull : {todo:{_id: req.body.id}}})
+  .then(result=>{
+    res.json(result)
   })
   .catch(err=>{
-		res.status(400).json({
-			success:false,
-			message:err.message
-		})
-	})
+    res.json(err)
+  })
 })
 
 
