@@ -283,7 +283,8 @@ paths:
   /v1/user:
     get:
       summary: Get User Info
-      tags: []
+      tags:
+        - User
       responses:
         '200':
           description: OK
@@ -321,7 +322,7 @@ paths:
       operationId: get-v1-user
   /v1/todo:
     get:
-      summary: Get Todo List
+      summary: Get Todolist
       tags:
         - Todo
       responses:
@@ -369,15 +370,11 @@ paths:
                 example-1:
                   value:
                     success: true
-                    todo:
-                      - done: false
-                        _id: 5fba6a4dddd2c40aae2bf3de
-                        description: fsdfsfesfesafsaefa
-                        duedate: '2020-11-22T00:00:00.000Z'
-                      - done: false
-                        _id: 5fba6aafddd2c40aae2bf3e1
-                        description: 투두 추가 테스트
-                        duedate: '2020-11-28T00:00:00.000Z'
+                    affected:
+                      done: false
+                      _id: 5fec8b29c989de3b86794e51
+                      description: string
+                      duedate: null
       tags:
         - Todo
       requestBody:
@@ -396,6 +393,21 @@ paths:
                 value:
                   description: Todo 추가 테스트
                   duedate: '2020-11-22 00:00:00'
+    delete:
+      summary: Delete Todo
+      operationId: delete-v1-todo
+      responses:
+        '200':
+          description: OK
+      description: Delete Todo by objectid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
 components:
   schemas:
     User:
@@ -514,5 +526,6 @@ tags:
   - name: Auth
   - name: Couple
   - name: Todo
+  - name: User
 security:
   - Access Token: []
