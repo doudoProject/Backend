@@ -72,12 +72,18 @@ router.post('/signin', (req, res) => {
             } else {
                 throw 'id or password mismatch'
             }
-        });
+        })
+        .catch(err=>{
+          res.status(400).json({
+            success:false,
+            message:err
+          })
+        })
     })
 	.catch(err=>{
 		res.status(400).json({
 			success:false,
-			message:err.message
+			message:err
 		})
 	})
 });

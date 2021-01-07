@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 //DB
 const keys = require('./config/keys');
 mongoose
-	.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+	.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
 	.then(() => {console.log('DB 연결 성공')})
 	.catch(err => {console.log('DB 연결 실패\n' + err)});
 
