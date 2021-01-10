@@ -11,15 +11,15 @@ var https = require('https');
 const fs = require('fs');
 
 const options = {
-  key: fs.readFileSync('/home/ubuntu/cert/api.doudo.kr/privkey1.pem'),
-  cert: fs.readFileSync('/home/ubuntu/cert/api.doudo.kr/cert1.pem')
+  key: fs.readFileSync('../../cert-backend/privkey.pem'),
+  cert: fs.readFileSync('../../cert-backend/cert.pem')
 };
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '8080');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /* HTTP SERVER(DISABLED)
@@ -41,7 +41,7 @@ var server = https.createServer(options, app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(443);
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
