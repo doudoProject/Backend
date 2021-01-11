@@ -7,13 +7,36 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 
+//Routes
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
 
 var app = express();
 
-//CORS(Temporary)
+//CORS
 app.use(require('cors')());
+
+//Socket.io
+const io = require('socket.io')
+app.io = io({
+  cors:{
+    origin:'*:*',
+    credentials: true
+  }
+});
+
+app.io.on('connection',function(socket){
+  console.log('socket connect !');
+
+  socket.on('disconnect', () => {
+      console.log('socket disconnect !');
+  })
+});
+
+app.io.use((socket, next) => {
+  console.log('socket connection established.')
+})
+
 
 //Body parser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,8 +46,8 @@ app.use(bodyParser.json());
 const keys = require('./config/keys');
 mongoose
 	.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
-	.then(() => {console.log('DB 연결 성공')})
-	.catch(err => {console.log('DB 연결 실패\n' + err)});
+	.then(() => {console.log('DB Connection Successful')})
+	.catch(err => {console.log('DB Connection Failed\n' + err)});
 
 //Passport
 app.use(passport.initialize());

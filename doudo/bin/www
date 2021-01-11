@@ -6,7 +6,6 @@
 
 var app = require('../app');
 var debug = require('debug')('doudo:server');
-var http = require('http');
 var https = require('https');
 const fs = require('fs');
 
@@ -15,55 +14,16 @@ const options = {
   cert: fs.readFileSync('../../cert-backend/cert.pem')
 };
 
-/**
- * Get port from environment and store in Express.
- */
-
-var port = normalizePort(process.env.PORT || '3000');
-app.set('port', port);
-
-/* HTTP SERVER(DISABLED)
-var server = http.createServer(app);
-
-server.listen(80);
-server.on('error', onError);
-server.on('listening', onListening);
-*/
-
-
-/**
- * Create HTTPS server.
- */
+var serverPort = 3000;
+app.set('port', serverPort);
 
 var server = https.createServer(options, app);
 
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
+server.listen(serverPort);
 server.on('error', onError);
 server.on('listening', onListening);
 
-/**
- * Normalize a port into a number, string, or false.
- */
-
-function normalizePort(val) {
-  var port = parseInt(val, 10);
-
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
-
-  if (port >= 0) {
-    // port number
-    return port;
-  }
-
-  return false;
-}
+app.io.attach(server);
 
 /**
  * Event listener for HTTP server "error" event.
@@ -103,4 +63,5 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+  console.log(bind)
 }
