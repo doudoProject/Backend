@@ -66,17 +66,41 @@ app.use(function(err, req, res, next) {
 //Socket.io
 const io = require('socket.io')
 app.io = io({
+  // cors: {
+  //   origin: "https://api.doudo.kr",
+  //   credentials: true
+  // },
   serveClient: false,
   pingInterval: 10000,
   pingTimeout: 5000,
   cookie: false
 });
 
+
 app.io.on('connection',socket=>{
   console.log('Connected to socket from '+ socket.handshake.headers['x-real-ip']);
   socket.on('disconnect', () => {
       console.log('socket disconnected !');
   })
+  socket.on('signin',user=>{
+    console.log('signin : ');
+    console.log(user);
+    //console.log(socket);
+    // TODO : Join room of specified couple
+    // TODO : make room id as couple id(socket.id) if it doesn't exist
+
+  })
+
+  socket.on('addtodo',todo=>{
+    console.log('addtodo : ');
+    console.log(todo);
+    //console.log(socket);
+    // TODO : notify clients of room client has joined that todo has been added
+  })
+
 });
+
+
+// require('./socketHandler');
 
 module.exports = app;
