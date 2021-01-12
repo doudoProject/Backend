@@ -16,27 +16,6 @@ var app = express();
 //CORS
 app.use(require('cors')());
 
-//Socket.io
-const io = require('socket.io')
-app.io = io({
-  cors:{
-    origin:'*:*',
-    credentials: true
-  }
-});
-
-app.io.on('connection',function(socket){
-  console.log('socket connect !');
-
-  socket.on('disconnect', () => {
-      console.log('socket disconnect !');
-  })
-});
-
-app.io.use((socket, next) => {
-  console.log('socket connection established.')
-})
-
 
 //Body parser
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -80,6 +59,24 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+
+
+//Socket.io
+const io = require('socket.io')
+app.io = io({
+  serveClient: false,
+  pingInterval: 10000,
+  pingTimeout: 5000,
+  cookie: false
+});
+
+app.io.on('connection',socket=>{
+  console.log('Connected to socket from '+ socket.handshake.headers['x-real-ip']);
+  socket.on('disconnect', () => {
+      console.log('socket disconnected !');
+  })
 });
 
 module.exports = app;

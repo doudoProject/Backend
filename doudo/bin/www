@@ -19,11 +19,11 @@ app.set('port', serverPort);
 
 var server = https.createServer(options, app);
 
+app.io.attach(server);
 server.listen(serverPort);
 server.on('error', onError);
 server.on('listening', onListening);
 
-app.io.attach(server);
 
 /**
  * Event listener for HTTP server "error" event.
