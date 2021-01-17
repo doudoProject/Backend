@@ -1,75 +1,50 @@
-let rooms=[];
-let users=[];
-
 function getCoupleId(socket){
-  return users[socket.id].user.couple.coupleid;
+  return socket.user.couple.coupleid;
 }
 
-function getCoupleIdByUser(user){
-  return user.info.couple.coupleid;
-}
-
-function joinRoom(socket,user){
-  let myCoupleId = getCoupleIdByUser(user);
-  if(!rooms[myCoupleId]) rooms[myCoupleId]=[];
-  rooms[myCoupleId].push(socket.id);
+function joinRoom(socket){
+  let myCoupleId = getCoupleId(socket);
   socket.join(myCoupleId);
 }
 
-function leaveRoom(socket){
-  let myCoupleId = getCoupleId(socket);
-  rooms[myCoupleId] = rooms[myCoupleId].filter(socketid=>{return socketid !== socket.id})
-  socket.leave(myCoupleId);
-}
-
 function connectUser(socket,user){
-  users[socket.id] = {user: user.info, socketid:socket.id};
+  socket.user = user.info;
 }
 
-function disconnectUser(socket){
-  users = users.filter(user=>{user.socketid !== socket.id})
-}
-
-function isSocketSignedIn(socket){
-  return (users[socket.id] !== null && users[socket.id] !== undefined);
+function isSocketUser(socket){
+  return (socket.user !== null && socket.user !== undefined)
 }
 
 const socketHandler = 
   (socket)=>{
-    console.log('+ '+ socket.handshake.headers['x-real-ip']);
+    console.log('\u001b[32m+ \u001b[0m'+ socket.handshake.headers['x-real-ip']);
 
     socket.on('disconnect', () => {
-      // TODO: delete socket user from users and rooms array
-      if(isSocketSignedIn(socket)){ // Check if it is signed-in user
-        leaveRoom(socket);
-        disconnectUser(socket);
-      }
-      console.log('- ' + socket.handshake.headers['x-real-ip']);
+      if(isSocketUser(socket)) // Check if it is registered user
+        console.log('\u001b[31m- \u001b[0m' + socket.user.name + '(' + socket.user.userid + ')')
+      console.log('\u001b[31m- \u001b[0m' + socket.handshake.headers['x-real-ip']);
     })
 
-    // TODO : register socket user using frontend eventlistener(connect)
     socket.on('userconnect',user=>{
-      console.log('registed user connected: ');
-      console.log(user);
-    
+      console.log('\u001b[32m+ \u001b[0m' + user.info.name + '(' + user.info.userid + ')');
+
       connectUser(socket,user);
-      joinRoom(socket,user);
-    
-      // DEBUG
-      console.log('=========debug============')
-      console.log(users)
-      console.log(rooms)
-      console.log('=========debug end============')
+      joinRoom(socket);
     })
 
     socket.on('addtodo',todo=>{
-      // console.log('emit to couple('+users[socket.id].user.couple.coupleid+') that ' + todo);
-      socket.broadcast.to(users[socket.id].user.couple.coupleid).emit('todoadded',todo)
+      socket.broadcast.to(getCoupleId(socket)).emit('todoadded',todo)
+    })
+    socket.on('deletetodo',id=>{
+      socket.broadcast.to(getCoupleId(socket)).emit('tododeleted',id)
+    })
+    socket.on('modifytodo',todo=>{
+      socket.broadcast.to(getCoupleId(socket)).emit('todomodified',todo)
     })
 
     // TODO : Chat read notifier
     socket.on('chat',chat=>{
-      socket.broadcast.to(users[socket.id].user.couple.coupleid).emit('chatadded',chat)
+      socket.broadcast.to(getCoupleId(socket)).emit('chatadded',chat)
     })
   }
 
