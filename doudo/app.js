@@ -64,7 +64,7 @@ app.use(function(err, req, res, next) {
 
 
 //Socket.io
-const io = require('socket.io')
+const io = require('socket.io');
 app.io = io({
   serveClient: false,
   pingInterval: 10000,
@@ -72,11 +72,8 @@ app.io = io({
   cookie: false
 });
 
-app.io.on('connection',socket=>{
-  console.log('Connected to socket from '+ socket.handshake.headers['x-real-ip']);
-  socket.on('disconnect', () => {
-      console.log('socket disconnected !');
-  })
-});
+// TODO : Handle users that have signed-in before server starts
+// -> do have sid, but it is not managed in server(need user info)
+app.io.on('connection',require('./socketHandler'));
 
 module.exports = app;
