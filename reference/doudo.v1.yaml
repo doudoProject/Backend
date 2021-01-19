@@ -431,6 +431,29 @@ paths:
                   done: true
                   duedate: string
         description: ''
+  /v1/chat:
+    get:
+      summary: Get Chat List
+      tags:
+        - Chat
+      responses: {}
+      operationId: get-v1-chat
+    post:
+      summary: Send Chat
+      operationId: post-v1-chat
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
 components:
   schemas:
     User:
@@ -550,5 +573,6 @@ tags:
   - name: Couple
   - name: Todo
   - name: User
+  - name: Chat
 security:
   - Access Token: []
