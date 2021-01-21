@@ -438,6 +438,7 @@ paths:
         - Chat
       operationId: get-v1-chat
       parameters: []
+      responses: {}
     post:
       summary: Send Chat
       operationId: post-v1-chat
