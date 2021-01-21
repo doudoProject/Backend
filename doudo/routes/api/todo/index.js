@@ -1,7 +1,6 @@
 var router = require('express').Router()
 const mongoose = require('mongoose')
 const Couple = require('../../../models/Couple')
-const Todo = require('../../../models/Todo')
 
 /* 
 	GET Get Todolist

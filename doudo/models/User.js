@@ -4,26 +4,26 @@ const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
 	userid: {
-        type: String,
-        required: true,
+    type: String,
+    required: true,
 		unique:true
-    },
+  },
 	email: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    name : {
-        type: String,
-        required: true
-    },
+  	type: String,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  name : {
+    type: String,
+    required: true
+  },
 	couple : {
-        type: Schema.Types.ObjectId,
+  	type: Schema.Types.ObjectId,
 		ref:'couple'
-    },
+  },
 	permission:{
 		type: Number,
 		default:0
