@@ -431,13 +431,13 @@ paths:
                   done: true
                   duedate: string
         description: ''
-  /v1/chat:
+  '/v1/chat/{from}':
     get:
       summary: Get Chat List
       tags:
         - Chat
-      responses: {}
       operationId: get-v1-chat
+      parameters: []
     post:
       summary: Send Chat
       operationId: post-v1-chat
@@ -454,6 +454,13 @@ paths:
               properties:
                 message:
                   type: string
+    parameters:
+      - schema:
+          type: string
+        name: from
+        in: path
+        description: 'get a chat from {from} to now'
+        required: true
 components:
   schemas:
     User:
