@@ -6,7 +6,9 @@ const Couple = require('../../../models/Couple')
 	GET Get Chat List
 	/v1/chat
 */
-router.get('', (req, res, next) => {
+
+// TODO : mark as read
+router.get('/:from', (req, res, next) => {
 	Couple.aggregate([
 		{
 			$match:{
@@ -18,7 +20,7 @@ router.get('', (req, res, next) => {
 		},
 		{
 			$match: {
-				"chat.read": false
+				"chat.createdat": {$gte: new Date(req.params.from), $lt: new Date()}
 			}
 		},
 		{
@@ -40,13 +42,13 @@ router.get('', (req, res, next) => {
 		if(!chat) throw 'no such couple'
 		res.json({
 			success:true,
-			chats:chat[0].chats
+			chats: (chat.length ? chat[0].chats:[])
 		})
 	})
 	.catch(err=>{
 		res.status(400).json({
 			success:false,
-			message:err.message
+			message:err
 		})
 	})
 });
