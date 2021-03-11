@@ -10,8 +10,8 @@ var https = require('https');
 const fs = require('fs');
 
 const options = {
-  key: fs.readFileSync('../../cert-backend/privkey.pem'),
-  cert: fs.readFileSync('../../cert-backend/cert.pem')
+  key: fs.readFileSync('/cert/privkey.pem'),
+  cert: fs.readFileSync('/cert/cert.pem')
 };
 
 var serverPort = 3000;

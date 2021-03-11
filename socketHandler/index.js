@@ -7,8 +7,17 @@ function joinRoom(socket){
   socket.join(myCoupleId);
 }
 
+function leaveRoom(socket){
+  let myCoupleId = getCoupleId(socket);
+  socket.leave(myCoupleId);
+}
+
 function connectUser(socket,user){
   socket.user = user.info;
+}
+
+function disconnectUser(socket){
+  socket.user = null;
 }
 
 function isSocketUser(socket){
@@ -17,12 +26,11 @@ function isSocketUser(socket){
 
 const socketHandler = 
   (socket)=>{
-    console.log('\u001b[32m+ \u001b[0m'+ socket.handshake.headers['x-real-ip']);
 
     socket.on('disconnect', () => {
-      if(isSocketUser(socket)) // Check if it is registered user
+      if(isSocketUser(socket)){ // Check if it is registered user
         console.log('\u001b[31m- \u001b[0m' + socket.user.name + '(' + socket.user.userid + ')')
-      console.log('\u001b[31m- \u001b[0m' + socket.handshake.headers['x-real-ip']);
+      }
     })
 
     socket.on('userconnect',user=>{
@@ -30,6 +38,15 @@ const socketHandler =
 
       connectUser(socket,user);
       joinRoom(socket);
+    })
+
+    socket.on('userdisconnect',()=>{
+      if(isSocketUser(socket)){ // Check if it is registered user
+        console.log('\u001b[31m- \u001b[0m' + socket.user.name + '(' + socket.user.userid + ')')
+
+        leaveRoom(socket);
+        disconnectUser(socket);
+      }
     })
 
     socket.on('addtodo',todo=>{
