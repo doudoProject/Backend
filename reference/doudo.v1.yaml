@@ -6,7 +6,7 @@ info:
     ## API Documentation for Project Doudo
   contact:
     name: SeongCheol Park
-    email: gorae02@gmail.com
+    email: 0@chll.it
   termsOfService: Not published yet
   license:
     name: MIT License
@@ -15,7 +15,7 @@ servers:
   - url: 'https://doudo.run.goorm.io'
     description: Dev Server
   - url: 'https://api.doudo.kr'
-    description: AWS Server
+    description: OCI Server
 paths:
   /v1/auth/signup:
     post:
@@ -95,13 +95,11 @@ paths:
                   success:
                     type: boolean
                   message:
-                    type:
-                      - string
-                      - 'null'
+                    type: string
+                    nullable: true
                   accessToken:
-                    type:
-                      - string
-                      - 'null'
+                    type: string
+                    nullable: true
                   expiresIn:
                     type: integer
               examples:
