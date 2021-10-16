@@ -6,7 +6,7 @@ info:
     ## API Documentation for Project Doudo
   contact:
     name: SeongCheol Park
-    email: gorae02@gmail.com
+    email: 0@chll.it
   termsOfService: Not published yet
   license:
     name: MIT License
@@ -15,7 +15,7 @@ servers:
   - url: 'https://doudo.run.goorm.io'
     description: Dev Server
   - url: 'https://api.doudo.kr'
-    description: AWS Server
+    description: OCI Server
 paths:
   /v1/auth/signup:
     post:
@@ -95,13 +95,11 @@ paths:
                   success:
                     type: boolean
                   message:
-                    type:
-                      - string
-                      - 'null'
+                    type: string
+                    nullable: true
                   accessToken:
-                    type:
-                      - string
-                      - 'null'
+                    type: string
+                    nullable: true
                   expiresIn:
                     type: integer
               examples:
@@ -431,6 +429,37 @@ paths:
                   done: true
                   duedate: string
         description: ''
+  '/v1/chat/{from}':
+    get:
+      summary: Get Chat List
+      tags:
+        - Chat
+      operationId: get-v1-chat
+      parameters: []
+      responses: {}
+    post:
+      summary: Send Chat
+      operationId: post-v1-chat
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Chat
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+    parameters:
+      - schema:
+          type: string
+        name: from
+        in: path
+        description: 'get a chat from {from} to now'
+        required: true
 components:
   schemas:
     User:
@@ -550,5 +579,6 @@ tags:
   - name: Couple
   - name: Todo
   - name: User
+  - name: Chat
 security:
   - Access Token: []
